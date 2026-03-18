@@ -4,15 +4,18 @@ import SendButton from '@/views/HomeView/components/SendButton';
 import { FaPlus } from 'react-icons/fa6';
 import Tooltip from '@/components/Tooltip/Tooltip';
 import UploadImage from '@/components/UploadImage/UploadImage';
+import StopButton from "@/views/HomeView/components/StopButton";
 
 interface Props {
   text: string;
   hasImages?: boolean;
+  isSending: boolean;
   onSend: () => void;
+  onStop: () => void;
   onUploadImage: (file: File) => void;
 }
 
-const Tools = ({ text, hasImages = false, onSend, onUploadImage }: Props) => {
+const Tools = ({ text, hasImages = false, onSend, onUploadImage, isSending, onStop }: Props) => {
   return (
     <div className="mt-2 flex items-center justify-between gap-2">
       <div className="flex items-center gap-2">
@@ -24,7 +27,13 @@ const Tools = ({ text, hasImages = false, onSend, onUploadImage }: Props) => {
         </UploadImage>
       </div>
 
-      {text.trim() || hasImages ? <SendButton onClick={onSend} /> : <RecordButton />}
+      {
+        isSending ? (
+          <StopButton onClick={onStop} />
+        ) : (
+          text.trim() || hasImages ? <SendButton onClick={onSend} /> : <RecordButton />
+        )
+      }
     </div>
   );
 };

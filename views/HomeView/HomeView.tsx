@@ -1,34 +1,71 @@
 'use client';
-import React, { useState } from 'react';
+
+import React, { useEffect, useRef } from 'react';
 import InputChat from '@/views/HomeView/components/InputChat';
 import MessageList from '@/views/HomeView/components/MessageList';
-import { Message } from '@/types/Message.model';
+import { useChatMessages } from '@/hooks/useChatMessages';
+import { useChatScrollPagination } from '@/hooks/useChatScrollPagination';
 
 const HomeView = () => {
-  const [messages, setMessages] = useState<Message[]>([]);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
 
-  const handleSendMessage = (text: string) => {
-    const trimmedText = text.trim();
-    if (!trimmedText) return;
+  const {
+    messages,
+    isLoadingHistory,
+    isLoadingMore,
+    hasMore,
+    sendMessage,
+    loadMoreMessages,
+    isSending,
+    handleStopStreaming,
+  } = useChatMessages();
 
-    setMessages((prev) => [
-      ...prev,
-      {
-        id: crypto.randomUUID(),
-        text: trimmedText,
-        role: 'user',
-      },
-    ]);
-  };
+  useChatScrollPagination({
+    containerRef: scrollContainerRef,
+    onLoadMore: loadMoreMessages,
+    enabled: hasMore && !isLoadingHistory && !isLoadingMore,
+  });
+
+  useEffect(() => {
+    const container = scrollContainerRef.current;
+    if (!container) return;
+
+    container.scrollTop = container.scrollHeight;
+  }, [isLoadingHistory]);
+
+  useEffect(() => {
+    const container = scrollContainerRef.current;
+    if (!container) return;
+
+    const lastMessage = messages[messages.length - 1];
+    if (!lastMessage) return;
+
+    const isAssistantStreaming =
+      lastMessage.role === 'assistant' &&
+      (lastMessage.status === 'loading' || lastMessage.status === 'streaming');
+
+    const isUserMessage = lastMessage.role === 'user';
+
+    if (isUserMessage || isAssistantStreaming) {
+      container.scrollTop = container.scrollHeight;
+    }
+  }, [messages]);
 
   return (
-    <div className="container flex h-full flex-col">
-      <div className="flex-1 overflow-hidden">
-        <MessageList messages={messages} />
+    <div className="flex h-full flex-col">
+      <div
+        ref={scrollContainerRef}
+        className="flex-1 overflow-y-auto scrollbar-hidden"
+      >
+        <div className="container">
+          <MessageList messages={messages} />
+        </div>
       </div>
 
-      <div className="pb-4">
-        <InputChat onSend={handleSendMessage} />
+      <div className="container">
+        <div className="pb-4">
+          <InputChat onSend={sendMessage} isSending={isSending} onStop={handleStopStreaming} />
+        </div>
       </div>
     </div>
   );

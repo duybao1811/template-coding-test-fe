@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useMemo, useState } from 'react';
+import React, { useState } from 'react';
 import Input from '@/components/Input/Input';
 import Tools from '@/views/HomeView/components/Tools';
 import UpgradeBanner from '@/views/HomeView/components/UpgradeBanner';
@@ -8,6 +8,8 @@ import ImagePreviewList from '@/views/HomeView/components/ImagePreviewList';
 
 interface Props {
   onSend: (text: string, images: File[]) => void;
+  onStop: () => void;
+  isSending: boolean
 }
 
 export interface PreviewImageItem {
@@ -16,7 +18,7 @@ export interface PreviewImageItem {
   previewUrl: string;
 }
 
-const InputChat = ({ onSend }: Props) => {
+const InputChat = ({ onSend, isSending, onStop }: Props) => {
   const [text, setText] = useState('');
   const [images, setImages] = useState<PreviewImageItem[]>([]);
 
@@ -65,7 +67,7 @@ const InputChat = ({ onSend }: Props) => {
           onChange={(e) => setText(e.target.value)}
           value={text}
           onKeyDown={(e) => {
-            if (e.key === 'Enter' && !e.shiftKey) {
+            if (e.key === 'Enter' && !e.shiftKey && !isSending) {
               e.preventDefault();
               handleSend();
             }
@@ -77,6 +79,8 @@ const InputChat = ({ onSend }: Props) => {
           hasImages={images.length > 0}
           onSend={handleSend}
           onUploadImage={handleAddImage}
+          isSending={isSending}
+          onStop={onStop}
         />
       </div>
     </div>
