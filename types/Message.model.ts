@@ -9,15 +9,7 @@ export interface Message {
 
 export interface MessageAttachment {
   id: string;
-  type: 'image';
-  originalName: string;
-  filename: string;
-  mimeType: string;
-  size: number;
-  localPath: string;
   url: string;
-  openaiFileId: string | null;
-  createdAt: string;
 }
 
 export type MessageRole = 'user' | 'assistant'

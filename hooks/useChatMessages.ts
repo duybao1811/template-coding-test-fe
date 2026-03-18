@@ -147,60 +147,35 @@ export const useChatMessages = (): UseChatMessagesResult => {
 
       setIsSending(true);
 
-      let userMessageId = crypto.randomUUID();
+      const userMessageId = crypto.randomUUID();
 
       try {
-        let uploadedAttachments: MessageAttachment[] = [];
+        const localPreviewAttachments: MessageAttachment[] = images.map((file) => ({
+          id: crypto.randomUUID(),
+          url: URL.createObjectURL(file),
+        }));
 
-        if (images.length > 0) {
-          const uploadResult = await chatApiService.uploadImages({
-            sessionId,
-            message: trimmedText,
-            images,
-          });
-
-          userMessageId = uploadResult.data.messageId;
-          uploadedAttachments = uploadResult.data.attachments ?? [];
-
-          setMessages((prev) => [
-            ...prev,
-            {
-              id: userMessageId,
-              content: trimmedText,
-              role: 'user',
-              status: 'done',
-              attachments: uploadedAttachments,
-            },
-            {
-              id: assistantTempId,
-              content: '',
-              role: 'assistant',
-              status: 'loading',
-            },
-          ]);
-        } else {
-          setMessages((prev) => [
-            ...prev,
-            {
-              id: userMessageId,
-              content: trimmedText,
-              role: 'user',
-              status: 'done',
-              attachments: [],
-            },
-            {
-              id: assistantTempId,
-              content: '',
-              role: 'assistant',
-              status: 'loading',
-            },
-          ]);
-        }
+        setMessages((prev) => [
+          ...prev,
+          {
+            id: userMessageId,
+            content: trimmedText,
+            role: 'user',
+            status: 'done',
+            attachments: localPreviewAttachments,
+          },
+          {
+            id: assistantTempId,
+            content: '',
+            role: 'assistant',
+            status: 'loading',
+          },
+        ]);
 
         await chatApiService.streamChat({
           sessionId,
           message: trimmedText,
-          attachmentIds: uploadedAttachments?.map((item) => item.id),
+          images: images,
           signal: controller.signal,
           onChunk: (chunk) => {
             setMessages((prev) =>

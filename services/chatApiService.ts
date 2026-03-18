@@ -4,23 +4,6 @@ import {parseJson} from "@/utils";
 import {StreamEventPayload, StreamChatParams} from "@/types/StreamEvent.model";
 import {UploadImagesParams, UploadImagesResponse} from "@/types/UploadImage.model";
 
-const formatResponse = async (response: Response): Promise<void> => {
-  if (response.ok) {
-    return;
-  }
-
-  let errorMessage = `Request failed with status ${response.status}`;
-
-  try {
-    const data = (await response.json()) as { message?: string };
-    if (data?.message) {
-      errorMessage = data.message;
-    }
-  } catch {}
-
-  throw new Error(errorMessage);
-};
-
 export const chatApiService = {
   async getHistory(sessionId: string, params?: GetHistoryParams): Promise<HistoryResponse> {
     const searchParams = new URLSearchParams();
@@ -46,35 +29,32 @@ export const chatApiService = {
       },
     );
 
-    await formatResponse(response);
-
     return response.json();
   },
 
   async streamChat({
-     sessionId,
-     attachmentIds,
-     message,
-     onMeta,
-     onChunk,
-     onDone,
+    sessionId,
+    images,
+    message,
+    onChunk,
+    onDone,
     signal,
    }: StreamChatParams): Promise<void> {
+    const formData = new FormData();
+    formData.append('sessionId', sessionId);
+    formData.append('message', message);
+
+    images?.forEach((image) => {
+      formData.append('images', image);
+    });
     const response = await fetch(`${API_BASE_URL}/chat/stream`, {
       method: 'POST',
+      body: formData,
       headers: {
-        'Content-Type': 'application/json',
         Accept: 'text/event-stream',
       },
-      body: JSON.stringify({
-        sessionId,
-        message,
-        attachmentIds,
-      }),
-      signal
+      signal,
     });
-
-    await formatResponse(response);
 
     if (!response.body) {
       return;
@@ -106,14 +86,6 @@ export const chatApiService = {
         const jsonString = line.slice(6);
         const payload = parseJson<StreamEventPayload>(jsonString);
 
-        if (payload.type === 'meta') {
-          onMeta?.({
-            conversationId: payload.conversationId ?? '',
-            messageId: payload.messageId ?? '',
-          });
-          continue;
-        }
-
         if (payload.type === 'chunk') {
           if (payload.content) {
             onChunk?.(payload.content);
@@ -132,7 +104,7 @@ export const chatApiService = {
         }
 
         if (payload.type === 'error') {
-          throw new Error(payload.message ?? 'Stream error');
+          throw new Error(payload.message ?? 'stream error');
         }
       }
     }
@@ -155,8 +127,6 @@ export const chatApiService = {
       method: 'POST',
       body: formData,
     });
-
-    await formatResponse(response);
 
     return response.json();
   },

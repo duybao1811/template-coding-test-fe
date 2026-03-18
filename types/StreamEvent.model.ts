@@ -35,7 +35,7 @@ export type StreamDonePayload = {
 export type StreamChatParams = {
   sessionId: string;
   message: string;
-  attachmentIds?: string[];
+  images?: File[];
   onMeta?: (payload: StreamMetaPayload) => void;
   onChunk?: (chunk: string) => void;
   onDone?: (payload: StreamDonePayload) => void;

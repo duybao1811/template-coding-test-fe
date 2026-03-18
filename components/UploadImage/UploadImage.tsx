@@ -4,13 +4,11 @@ import React, { useRef } from 'react';
 
 interface Props {
   onUpload?: (file: File) => void;
-  accept?: string;
   children: React.ReactNode;
 }
 
 const UploadImage = ({
  onUpload,
- accept = 'image/*',
  children,
 }: Props) => {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
@@ -23,7 +21,8 @@ const UploadImage = ({
     const file = e.target.files?.[0];
     if (!file) return;
 
-    if (!file.type.startsWith('image/')) {
+    const allowedTypes = ['image/png', 'image/jpeg', 'image/webp', 'image/jpg', 'image/gif',]
+    if (!allowedTypes.includes(file.type) || !file.type.startsWith('image/')) {
       e.target.value = '';
       return;
     }
@@ -41,7 +40,7 @@ const UploadImage = ({
       <input
         ref={fileInputRef}
         type="file"
-        accept={accept}
+        accept={'image/png, image/jpeg, image/webp'}
         hidden
         onChange={handleChangeFile}
       />
