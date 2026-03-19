@@ -35,10 +35,10 @@ const UpgradeBanner = () => {
             <Tooltip label={'Qwen'} placement={'top'} />
           </div>
           <p className={'font-medium text-sm'}>
-          <span className={'font-bold text-primary underline cursor-pointer'}>
-            Upgrade
-          </span>
-            {' '}for best quality, speed, and full control.
+            <span className={'font-bold text-primary underline cursor-pointer'}>
+              Upgrade
+            </span>
+              {' '}for best quality, speed, and full control.
           </p>
         </div>
         <div className={'cursor-pointer'} onClick={() => setVisible(false)}>

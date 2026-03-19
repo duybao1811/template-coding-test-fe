@@ -16,18 +16,13 @@ import { TbTemplate } from 'react-icons/tb';
 import clsx from 'clsx';
 import Tooltip from "@/components/Tooltip/Tooltip";
 
-interface MenuItem {
-  label: string;
-  icon: React.ReactNode;
-  active?: boolean;
-}
-
 interface SidebarItemProps {
   icon: React.ReactNode;
   label: string;
+  active?: boolean;
 }
 
-const menus: MenuItem[] = [
+const menus: SidebarItemProps[] = [
   { label: 'Home', icon: <FiHome size={18} />, active: true },
   { label: 'Document', icon: <FiFileText size={18} /> },
   { label: 'Design', icon: <MdOutlineDesignServices size={18} /> },
@@ -42,13 +37,14 @@ const menus: MenuItem[] = [
 
 export default function Sidebar() {
   return (
-    <div className="flex h-screen w-[68px] flex-col justify-between bg-foreground">
+    <div className="flex h-screen md:w-[68px] flex-col justify-between md:bg-foreground bg-white">
       <div className="flex flex-col gap-3 px-2 py-3">
         {menus.map((item) => (
           <SidebarItem
             key={item.label}
             icon={item.icon}
             label={item.label}
+            active={item.active}
           />
         ))}
       </div>
@@ -61,17 +57,17 @@ export default function Sidebar() {
   );
 }
 
-function SidebarItem({ icon, label }: SidebarItemProps) {
+function SidebarItem({ icon, label, active }: SidebarItemProps) {
   return (
     <div className="group relative flex justify-center">
-      <button className={'flex w-full flex-col items-center justify-center rounded-xl text-text-primary transition-all duration-200 outline-none cursor-pointer'}>
+      <button className={'flex w-full md:flex-col md:gap-0 gap-2 flex-row items-center md:justify-center rounded-xl text-text-primary transition-all duration-200 outline-none cursor-pointer'}>
         <span
-          className={clsx('flex h-[28px] w-full items-center justify-center rounded-full transition-colors duration-200 bg-transparent group-hover:bg-[#d8dfee]',)}
+          className={clsx('flex h-[28px] md:w-full items-center justify-center rounded-full transition-colors duration-200', active ? 'text-primary font-medium md:bg-[#d8dfee]' : 'text-text-primary bg-transparent group-hover:bg-[#d8dfee]')}
         >
           {icon}
         </span>
 
-        <span className="mt-0.5 text-xs2">{label}</span>
+        <span className={clsx('mt-0.5 text-xs2', active ? 'text-primary font-medium' : 'text-text-primary')}>{label}</span>
       </button>
 
       <Tooltip label={label} />
@@ -82,11 +78,11 @@ function SidebarItem({ icon, label }: SidebarItemProps) {
 function UpgradeItem() {
   return (
     <div className="group relative flex justify-center">
-      <button className="flex w-full flex-col items-center justify-center rounded-xl py-2 text-text-primary transition-all duration-200">
-        <span className="flex h-9 w-9 items-center justify-center rounded-full bg-primary text-white shadow-sm">
+      <button className="flex w-full md:flex-col gap-1 items-center justify-center md:rounded-xl rounded-full py-2 text-text-primary transition-all duration-200 md:bg-transparent bg-primary">
+        <span className="flex h-9 w-9 items-center justify-center rounded-full md:bg-primary text-white shadow-sm">
           <PiCrownSimpleBold size={20} />
         </span>
-        <span className="mt-1 text-xs2 leading-none">Upgrade</span>
+        <span className="md:text-xs2 text-base md:text-text-primary text-white leading-none">Upgrade</span>
       </button>
 
       <Tooltip label="Upgrade" />

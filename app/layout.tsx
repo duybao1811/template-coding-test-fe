@@ -24,7 +24,9 @@ export default function RootLayout({
         className={`${inter.variable} antialiased`}
       >
         <div className={'grid grid-cols-[auto_1fr]'}>
-          <Sidebar />
+          <div className={'md:block hidden'}>
+            <Sidebar />
+          </div>
           <div className={'flex flex-col h-screen'}>
             <Header />
             <div className={'flex-1 overflow-hidden'}>
