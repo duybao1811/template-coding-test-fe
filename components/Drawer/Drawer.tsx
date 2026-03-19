@@ -2,7 +2,6 @@
 
 import React, { useEffect } from 'react';
 import clsx from 'clsx';
-import { IoClose } from "react-icons/io5";
 
 interface DrawerProps {
   open: boolean;
@@ -52,9 +51,6 @@ export default function Drawer({
               : 'translate-x-full',
         )}
       >
-        <button onClick={onClose} className={'px-2 py-3'}>
-          <IoClose size={20} />
-        </button>
         {children}
       </div>
     </>

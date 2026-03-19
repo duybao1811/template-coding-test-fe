@@ -23,7 +23,7 @@ export default function RootLayout({
       <body
         className={`${inter.variable} antialiased`}
       >
-        <div className={'grid grid-cols-[auto_1fr]'}>
+        <div className={'md:grid md:grid-cols-[auto_1fr]'}>
           <div className={'md:block hidden'}>
             <Sidebar />
           </div>

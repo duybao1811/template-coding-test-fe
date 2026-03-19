@@ -1,42 +1,124 @@
-# 🌐 Live Demo
+# 🚀 Template Coding Test - Frontend (Next.js)
 
+## 🌐 Live Demo
 👉 https://template-coding-test-fe.vercel.app/
 
 ---
 
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+## 📌 Overview
+This project is a frontend application built with **Next.js** for the coding test submission.  
+It provides a responsive chat interface that connects to the backend API, supports session-based conversations, and displays chat history.
 
-## Getting Started
+---
 
-First, run the development server:
+## ⚙️ Tech Stack
+- Next.js
+- React
+- TypeScript
+- TailwindCss
+- REST API integration, Stream API
+
+---
+
+## ✨ Features
+- Responsive UI for desktop and mobile
+- Chat interface connected to backend API
+- Session-based conversation handling
+- Load and display chat history
+- API integration with backend service
+
+---
+
+## 🛠️ Setup & Run
+
+### 1. Install dependencies
+
+```bash
+npm install
+```
+
+---
+
+### 2. Create environment file
+
+Create a `.env.local` file in the project root:
+
+```bash
+cp .env.example .env.local
+```
+
+If `.env.example` does not exist, create `.env.local` manually and add the following variable:
+
+```env
+NEXT_PUBLIC_BASE_API_URL=http://localhost:3001/api/v1
+```
+
+### Environment variable explanation
+
+| Variable | Description |
+|----------|-------------|
+| `NEXT_PUBLIC_BASE_API_URL` | Backend API base URL used by the frontend |
+
+---
+
+### 3. Run the development server
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Then open:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+👉 http://localhost:3000
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
+## 🔗 Backend Connection
 
-To learn more about Next.js, take a look at the following resources:
+Make sure the backend server is running before starting the frontend.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Example backend local URL:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```env
+http://localhost:3001/api/v1
+```
 
-## Deploy on Vercel
+If you want to connect to a deployed backend, update `.env.local` like this:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```env
+NEXT_PUBLIC_BASE_API_URL=https://your-backend-domain.com/api/v1
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+
+## 📂 Project Structure
+
+```bash
+app/
+components/
+views/
+services/
+types/
+utils/
+styles/
+constants/
+config/
+hooks/
+```
+
+---
+
+## 🔐 Notes
+
+- Use `.env.local` for local development
+- Restart the Next.js server after changing environment variables
+- The `NEXT_PUBLIC_` prefix is required so the variable can be used on the client side
+
+---
+
+## 🚀 Production Build
+
+```bash
+npm run build
+npm run start
+```
